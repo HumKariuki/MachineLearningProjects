@@ -4,7 +4,7 @@ import streamlit as st
 import joblib
 
 # Loading the saved model using joblib
-loaded_model = joblib.load("goldmodel.joblib")
+loaded_model = pickle.load(open("goldmodel.sav", 'rb'))
 
 
 def gold_price_prediction(input_data):
