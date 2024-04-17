@@ -1,10 +1,11 @@
 
 import numpy as np
-import pickle
 import streamlit as st
+import joblib
 
-# Loading the saved model
-loaded_model = pickle.load(open('goldmodel.pkl', 'rb'))
+# Loading the saved model using joblib
+loaded_model = joblib.load("goldmodel.joblib")
+
 
 def gold_price_prediction(input_data):
     # Reshape the input data as we are predicting for only one instance
