@@ -4,7 +4,7 @@ import pickle
 import streamlit as st
 
 # Loading the saved model
-loaded_model = pickle.load(open('goldmodel.sav', 'rb'))
+loaded_model = pickle.load(open('goldmodel.pkl', 'rb'))
 
 def gold_price_prediction(input_data):
     # Reshape the input data as we are predicting for only one instance
