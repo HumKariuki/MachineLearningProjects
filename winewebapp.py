@@ -3,7 +3,7 @@ import pickle
 import streamlit as st
 
 # Loading the saved model
-loaded_model=pickle.load(open(r"C:\Users\LENOVO\OneDrive\Desktop\wineprediction\ntrain52_model.sav",'rb'))
+loaded_model=pickle.load(open("ntrain52_model.sav",'rb'))
 def wineprediction(input_data):
     # Changing the input data to numpy array
     input_data_as_numpy_array = np.asarray(input_data)
