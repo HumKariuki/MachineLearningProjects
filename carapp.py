@@ -10,7 +10,7 @@ import pickle
 import streamlit as st
 
 # Loading the saved model
-loaded_model = pickle.load(open(r"C:\Users\LENOVO\OneDrive\Desktop\ML\carmodel.sav", 'rb'))
+loaded_model = pickle.load(open("carmodel.sav", 'rb'))
 
 def car_price_prediction(input_data):
     # Predict the car price using the loaded model
