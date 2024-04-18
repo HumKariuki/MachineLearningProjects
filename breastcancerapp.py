@@ -3,7 +3,7 @@ import pickle
 import streamlit as st
 
 # Loading the saved model
-loaded_model = pickle.load(open(r"C:\Users\LENOVO\OneDrive\Desktop\ML\breastcancer.sav", 'rb'))
+loaded_model = pickle.load(open("breastcancer.sav", 'rb'))
 
 def breastprediction(input_data):
     # Changing the input data to numpy array
