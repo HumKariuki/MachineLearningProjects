@@ -52,15 +52,21 @@ if selected == 'Diabetes Prediction':
 
     # Code for Prediction
     if submit_button:
-        handle_missing_inputs(fields)
-        diab_prediction = diabetes_model.predict([[fields['Pregnancies'], fields['Glucose'], fields['BloodPressure'],
-                                                   fields['SkinThickness'], fields['Insulin'], fields['BMI'],
-                                                   fields['DiabetesPedigreeFunction'], fields['Age']]])
+        # Validate and handle missing or incorrect inputs
+        try:
+            diab_prediction = diabetes_model.predict([[fields['Pregnancies'], fields['Glucose'], fields['BloodPressure'],
+                                                       fields['SkinThickness'], fields['Insulin'], fields['BMI'],
+                                                       fields['DiabetesPedigreeFunction'], fields['Age']]])
+            
+            if diab_prediction[0] == 1:
+                st.success('The person is diabetic')
+            else:
+                st.success('The person is not diabetic')
+        
+        except ValueError as e:
+            st.error(f"Error: {e}. Please ensure all input fields are filled correctly.")
 
-        if diab_prediction[0] == 1:
-            st.success('The person is diabetic')
-        else:
-            st.success('The person is not diabetic')
+
 
 # Heart Disease Prediction Page
 elif selected == 'Heart Disease Prediction':
