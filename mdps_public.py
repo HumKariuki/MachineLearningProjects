@@ -1,16 +1,9 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Sun May  8 21:01:15 2022
-@author: siddhardhan
-"""
-
 import pickle
 import streamlit as st
 from streamlit_option_menu import option_menu
 
 
 # Loading the saved models
-
 diabetes_model = pickle.load(open('diabetes_model.sav', 'rb'))
 heart_disease_model = pickle.load(open('heart_disease_model.sav', 'rb'))
 parkinsons_model = pickle.load(open('parkinsons_model.sav', 'rb'))
@@ -18,7 +11,6 @@ parkinsons_model = pickle.load(open('parkinsons_model.sav', 'rb'))
 
 # Sidebar for navigation
 with st.sidebar:
-    
     selected = option_menu('Multiple Disease Prediction System',
                            ['Diabetes Prediction',
                             'Heart Disease Prediction',
@@ -81,6 +73,33 @@ default_values = {
 }
 
 
+# Function to perform prediction with error handling
+def predict_diabetes(Pregnancies, Glucose, BloodPressure, SkinThickness, Insulin, BMI, DiabetesPedigreeFunction, Age):
+    try:
+        # Ensure all inputs are converted to floats
+        input_data = [
+            float(Pregnancies),
+            float(Glucose),
+            float(BloodPressure),
+            float(SkinThickness),
+            float(Insulin),
+            float(BMI),
+            float(DiabetesPedigreeFunction),
+            float(Age)
+        ]
+        
+        # Perform prediction
+        prediction = diabetes_model.predict([input_data])
+        
+        if prediction[0] == 1:
+            return 'The person is diabetic'
+        else:
+            return 'The person is not diabetic'
+    
+    except ValueError as e:
+        return f"Prediction Error: {str(e)}"
+
+
 # Diabetes Prediction Page
 if selected == 'Diabetes Prediction':
     
@@ -98,18 +117,11 @@ if selected == 'Diabetes Prediction':
     
     # Code for Prediction
     if submit_button:
-        try:
-            diab_prediction = diabetes_model.predict([[fields['Pregnancies'], fields['Glucose'], fields['BloodPressure'],
-                                                       fields['SkinThickness'], fields['Insulin'], fields['BMI'],
-                                                       fields['DiabetesPedigreeFunction'], fields['Age']]])
+        result = predict_diabetes(fields['Pregnancies'], fields['Glucose'], fields['BloodPressure'],
+                                  fields['SkinThickness'], fields['Insulin'], fields['BMI'],
+                                  fields['DiabetesPedigreeFunction'], fields['Age'])
+        st.success(result)
 
-            if diab_prediction[0] == 1:
-                st.success('The person is diabetic')
-            else:
-                st.success('The person is not diabetic')
-
-        except ValueError as e:
-            st.error(f"Error: {e}. Please ensure all input fields are filled correctly.")
 
 
 # Heart Disease Prediction Page
