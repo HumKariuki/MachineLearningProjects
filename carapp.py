@@ -8,23 +8,41 @@ Created on Thu Apr 18 10:41:57 2024
 import numpy as np
 import pickle
 import streamlit as st
+import os
+import traceback
 
-# Loading the saved model
-loaded_model = pickle.load(open("carmodel.sav", 'rb'))
+# Function to load the saved model
+def load_model(model_path):
+    if os.path.exists(model_path):
+        try:
+            with open(model_path, 'rb') as file:
+                return pickle.load(file)
+        except Exception as e:
+            st.error(f"Error loading model: {e}")
+            st.error(traceback.format_exc())
+            return None
+    else:
+        st.error("Model file not found. Please ensure 'carmodel.sav' exists in the directory.")
+        return None
+
+# Load the model
+model_path = "carmodel.sav"
+loaded_model = load_model(model_path)
 
 def car_price_prediction(input_data):
-    # Predict the car price using the loaded model
-    predicted_car_price = loaded_model.predict(input_data)
-    
-    return predicted_car_price[0]
+    try:
+        predicted_car_price = loaded_model.predict(input_data)
+        return predicted_car_price[0]
+    except Exception as e:
+        st.error(f"Error during prediction: {e}")
+        st.error(traceback.format_exc())
+        return None
 
 def main():
-    # Sidebar for navigation
+    st.sidebar.title("Navigation")
     selected = st.sidebar.radio("Prediction Type", ["Car Price Prediction"])
 
-    # Car Price Prediction Page
     if selected == "Car Price Prediction":
-        # Giving a title
         st.title('Car Price Prediction Web App')
 
         # Input fields for predictors
@@ -45,15 +63,14 @@ def main():
         seller_type_numeric = seller_type_mapping[seller_type]
         transmission_numeric = transmission_mapping[transmission]
         
-        # Code for prediction
         prediction = ''
 
-        # Creating a button for prediction
         if st.button('Predict Car Price'):
-            input_data = [[year, present_price, kms_driven, fuel_type_numeric, seller_type_numeric, transmission_numeric, owner]]
-            prediction = car_price_prediction(input_data)
-        
-        st.success(f'Predicted Car Price: {prediction}')
+            input_data = np.array([[year, present_price, kms_driven, fuel_type_numeric, seller_type_numeric, transmission_numeric, owner]])
+            if loaded_model:
+                prediction = car_price_prediction(input_data)
+                if prediction is not None:
+                    st.success(f'Predicted Car Price: {prediction}')
 
 if __name__ == '__main__':
     main()
