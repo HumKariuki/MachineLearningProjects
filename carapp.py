@@ -26,7 +26,7 @@ def load_model(model_path):
         return None
 
 # Load the model
-model_path = "carmodel.sav"
+model_path = "ncarmodel.sav"
 loaded_model = load_model(model_path)
 
 def car_price_prediction(input_data):
