@@ -22,7 +22,7 @@ def load_model(model_path):
             st.error(traceback.format_exc())
             return None
     else:
-        st.error("Model file not found. Please ensure 'carmodel.sav' exists in the directory.")
+        st.error("Model file not found. Please ensure the model file exists in the directory.")
         return None
 
 # Load the model
@@ -31,8 +31,12 @@ loaded_model = load_model(model_path)
 
 def car_price_prediction(input_data):
     try:
-        predicted_car_price = loaded_model.predict(input_data)
-        return predicted_car_price[0]
+        if loaded_model is not None:
+            predicted_car_price = loaded_model.predict(input_data)
+            return predicted_car_price[0]
+        else:
+            st.error("Model not loaded. Prediction cannot be performed.")
+            return None
     except Exception as e:
         st.error(f"Error during prediction: {e}")
         st.error(traceback.format_exc())
@@ -71,6 +75,10 @@ def main():
                 prediction = car_price_prediction(input_data)
                 if prediction is not None:
                     st.success(f'Predicted Car Price: {prediction}')
+                else:
+                    st.error("Prediction could not be performed.")
+            else:
+                st.error("Model is not loaded. Please load a valid model.")
 
 if __name__ == '__main__':
     main()
